@@ -8,12 +8,15 @@ Parse weights file to produce C arrays:
 Each one will contain weights and constants for each layer.
 """
 
+import sys
+
 def write_arrays(neurons_number):
     if neurons_number not in (100, 200):
         print("neurons number can only be 100 or 200.")
         return
 
-    with open("net%d.c" % neurons_number, "w+") as net:
+    with open("../src/net.c", "w+") as net:
+        net.write("//%d\n" % neurons_number)
         net.write("#include <stdint.h>\n")
         # w1 array
         net.write("int16_t w1[%d][28][28] = {\n\t" % neurons_number)
@@ -39,6 +42,7 @@ def write_arrays(neurons_number):
             net.write(",".join([x.strip() for x in b2.readlines()]))
         net.write("\n};\n")
 
-
-write_arrays(100)
-write_arrays(200)
+if len(sys.argv) == 2:
+    write_arrays(int(sys.argv[1]))
+else:
+    write_arrays(100)
