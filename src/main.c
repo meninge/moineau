@@ -1,52 +1,43 @@
 /*
  * moineau/src/main.c
+ *
+ * Main file that executes the loops.
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 
-#define DATA_BEGIN 0xC
-
-extern int16_t w1[NEURONS_FIRST_LAYER][28][28];
-extern int16_t w2[10][NEURONS_FIRST_LAYER];
-extern int16_t b1[NEURONS_FIRST_LAYER];
-extern int16_t b2[10];
-
-void check_neurons_number();
+#include "helpers.h"
 
 int main(int argc, char *argv[])
 {
-	check_neurons_number();
+	FILE *mnist_label, *mnist_data;
+
+	/*
+	 * Check that Python parser generated file and make flags to generate
+	 * the executable are for the same number of neurons.
+	 */
+	if (check_neurons_number() < 0) {
+		printf("error: wrong neurons number\n");
+		return -1;
+	}
+	/*
+	 * Open MNIST dataset and labels.
+	 */
+	mnist_label = fopen("dataset/t10k-labels-idx1-ubyte", "rb");
+	if (mnist_label == NULL) {
+		printf("error: `dataset/t10k-labels-idx1-ubyte` file does not exist\n");
+		return -1;
+	}
+	mnist_data = fopen("dataset/t10k-images-idx3-ubyte", "rb");
+	if (mnist_data == NULL) {
+		printf("error: `dataset/t10k-images-idx3-ubyte` file does not exist\n");
+		return -1;
+	}
+
+	fclose(mnist_label);
+	fclose(mnist_data);
 
 	return 0;
-}
-
-void check_neurons_number()
-{
-	FILE *net;
-	char *first_line = NULL;
-	int neurons;
-	size_t n = 0;
-
-#if NEURONS_FIRST_LAYER != 100 && NEURONS_FIRST_LAYER != 200
-	printf("error: flag NEURONS_FIRST_LAYER must be 100 or 200\n");
-	exit(1);
-#endif
-	net = fopen("src/net.c", "r");
-	if (net == NULL) {
-		printf("error: `src/net.c` file does not exist\n");
-		exit(-1);
-	}
-	if (getline(&first_line, &n, net) < 0) {
-		printf("error: can't read line\n");
-		exit(-1);
-	}
-	sscanf(first_line, "//%d\n", &neurons);
-	if (neurons != NEURONS_FIRST_LAYER) {
-		printf("error: `src/net.c` must contain NEURONS_FIRST_LAYER neuron definitions\n");
-		exit(-1);
-	}
-	free(first_line);
-	fclose(net);
 }
