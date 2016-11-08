@@ -110,7 +110,7 @@ int32_t get_label(FILE *mnist_label, uint32_t image_number)
 /*
  * Take the 16 highest bits from in.
  */
-int16_t cut(int32_t in)
+int16_t cut(int64_t in)
 {
 	bool negative;
 	int16_t out;
@@ -118,8 +118,10 @@ int16_t cut(int32_t in)
 	negative = (in < 0) ? true : false;
 	if (negative)
 		in = -in;
-	in >>= 16;
-	out = (int16_t) in;
+	//in >>= 16;
+	in &= 0x0FFFF000;
+	in >>= 8;
+	out = (int16_t)in;
 	if (negative)
 		out = -out;
 

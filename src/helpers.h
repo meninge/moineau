@@ -7,6 +7,7 @@
 #define DATA_BEGIN 0x10
 #define LABEL_BEGIN 0x8
 #define IMAGE_NUMBER 1000
+//#define IMAGE_NUMBER 1
 #define ROWS 28
 #define COLUMNS 28
 
@@ -27,5 +28,5 @@ extern int16_t b2[10];
 int32_t check_neurons_number();
 uint8_t get_pixel(FILE *mnist_data, uint32_t image_number, uint32_t line,
 		uint32_t column);
-int16_t cut(int32_t in);
+int16_t cut(int64_t in);
 int32_t get_label(FILE *mnist_label, uint32_t image_number);
