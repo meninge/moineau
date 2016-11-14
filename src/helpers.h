@@ -7,7 +7,6 @@
 #define DATA_BEGIN 0x10
 #define LABEL_BEGIN 0x8
 #define IMAGE_NUMBER 1000
-//#define IMAGE_NUMBER 1
 #define ROWS 28
 #define COLUMNS 28
 

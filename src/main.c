@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 	int16_t out2_16[10] = {0};
 	int32_t i, j, n, image;
 	int32_t max = 0;
-	int32_t errors = 0;
+	int32_t success = 0;
 
 	/*
 	 * Check that Python parser generated file and make flags to generate
@@ -71,9 +71,10 @@ int main(int argc, char *argv[])
 		/*
 		 * Cut to 16 bits values and apply activation function
 		 */
+		//printf("SORTIE PREMIER NIVEAU :\n");
 		for (n = 0; n < NEURONS_FIRST_LAYER; n++) {
 			out1_16[n] = cut(out1[n]);
-			//printf("before = %d, after = %d\n", out1[n], out1_16[n]);
+			//printf("n = %d : before = %d, after = %d\n", n, out1[n], out1_16[n]);
 			out1_16[n] += b1[n];
 		}
 
@@ -88,8 +89,10 @@ int main(int argc, char *argv[])
 		/*
 		 * Apply second layer constants.
 		 */
+		//printf("SORTIE DEUXIEME NIVEAU :\n");
 		for (n = 0; n < 10; n++) {
 			out2_16[n] = cut(out2[n]);;
+			//printf("n = %d : before = %d, after = %d\n", n, out1[n], out1_16[n]);
 			out2_16[n] += b2[n];
 		}
 		/*
@@ -100,12 +103,12 @@ int main(int argc, char *argv[])
 				max = i;
 		}
 		/*
-		 * Compute error rate
+		 * Compute success rate
 		 */
-		if (max != get_label(mnist_label, image))
-			errors++;
+		if (max == get_label(mnist_label, image))
+			success++;
 	}
-	printf("error rate: %.2f%%\n", (errors / (float)IMAGE_NUMBER) * 100);
+	printf("success rate: %.2f%%\n", (success / (float)IMAGE_NUMBER) * 100);
 
 	fclose(mnist_label);
 	fclose(mnist_data);

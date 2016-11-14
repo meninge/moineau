@@ -118,8 +118,14 @@ int16_t cut(int64_t in)
 	negative = (in < 0) ? true : false;
 	if (negative)
 		in = -in;
-	//in >>= 16;
-	in &= 0x0FFFF000;
+	//in &= 0xFFFF0000; 91.3% error
+	//in &= 0x0FFFF000; 91.3% error
+	//in &= 0x03FFFC00; 83.10% error
+	//in &= 0x01FFFE00; 28.80% error
+	//in &= 0x00FFFF00; 11.60% error
+	//in &= 0x007FFF80; 16.30% error
+	//in &= 0x000FFFF0; 90.70% error
+	in &= 0x00FFFF00;
 	in >>= 8;
 	out = (int16_t)in;
 	if (negative)

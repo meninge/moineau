@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g -Wno-missing-braces
 LDFLAGS =
 EXEC = moineau
 SRC = $(wildcard src/*.c)
