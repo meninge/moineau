@@ -61,7 +61,7 @@ uint8_t get_pixel(FILE *mnist_data, uint32_t image_number, uint32_t line,
 	uint8_t pixel;
 	long image_offset;
 
-	if (image_number >= 1000 || line >= ROWS || column >= COLUMNS) {
+	if (image_number >= IMAGE_NUMBER || line >= ROWS || column >= COLUMNS) {
 		printf("error: wrong get_pixel arguments\n");
 		return 0;
 	}
@@ -122,10 +122,10 @@ int16_t cut(int64_t in)
 	//in &= 0x0FFFF000; 91.3% error
 	//in &= 0x03FFFC00; 83.10% error
 	//in &= 0x01FFFE00; 28.80% error
-	//in &= 0x00FFFF00; 11.60% error
+	in &= 0x00FFFF00; //11.60% error
 	//in &= 0x007FFF80; 16.30% error
 	//in &= 0x000FFFF0; 90.70% error
-	in &= 0x00FFFF00;
+	//in &= 0x0000FFFF;
 	in >>= 8;
 	out = (int16_t)in;
 	if (negative)
