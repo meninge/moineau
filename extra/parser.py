@@ -10,12 +10,21 @@ Each one will contain weights and constants for each layer.
 
 import sys
 
+"""
+Write four arrays:
+	- w1: weights for the first level
+	- w2: weights for the second level
+	- b1: recode data
+	- b2: useless
+"""
 def write_arrays(neurons_number):
     if neurons_number not in (100, 200):
         print("neurons number can only be 100 or 200.")
         return
 
     with open("../src/net.c", "w+") as net:
+        # The number of neurons is added as a C comment at the beginning of
+	# the file to be used as a checker.
         net.write("//%d\n" % neurons_number)
         net.write("#include <stdint.h>\n")
         # w1 array

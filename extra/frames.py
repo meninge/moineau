@@ -13,6 +13,10 @@ IMAGE_NUMBER = 1000
 ROWS = 28
 COLUMNS = 28
 
+"""
+Create a C file containing two arrays, one for the MNIST frames and one for
+the labels, ie the corresponding digits of these frames.
+"""
 def write_arrays(frame_number):
     if frame_number > IMAGE_NUMBER:
         raise Exception('Too much frames wanted')
