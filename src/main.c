@@ -75,7 +75,9 @@ int main(int argc, char *argv[])
 		for (n = 0; n < NEURONS_FIRST_LAYER; n++) {
 			out1_16[n] = cut(out1[n]);
 			//printf("n = %d : before = %d, after = %d\n", n, out1[n], out1_16[n]);
-			out1_16[n] += b1[n];
+			//out1_16[n] += b1[n];
+			out1[n] += b1[n];
+			out1[n] = (out1[n] > 0) ? out1[n] : 0;
 		}
 
 		/*
@@ -83,7 +85,8 @@ int main(int argc, char *argv[])
 		 */
 		for (i = 0; i < NEURONS_FIRST_LAYER; i++) {
 			for (n = 0; n < 10; n++) {
-				out2[n] += out1_16[i] * w2[n][i];
+				//out2[n] += out1_16[i] * w2[n][i];
+				out2[n] += out1[i] * w2[n][i];
 			}
 		}
 		/*
@@ -93,13 +96,16 @@ int main(int argc, char *argv[])
 		for (n = 0; n < 10; n++) {
 			out2_16[n] = cut(out2[n]);;
 			//printf("n = %d : before = %d, after = %d\n", n, out1[n], out1_16[n]);
-			out2_16[n] += b2[n];
+			//out2_16[n] += b2[n];
+			out2[n] += b2[n];
 		}
 		/*
 		 * Compute the maximum value for the second layer
 		 */
 		for (i = 0; i < 10; i++) {
-			if (out2_16[i] > out2_16[max])
+			printf("image n°%d, neurone n°%d : %d\n", image, i, out2[i]);
+			//if (out2_16[i] > out2_16[max])
+			if (out2[i] > out2[max])
 				max = i;
 		}
 		/*
