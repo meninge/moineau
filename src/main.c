@@ -82,6 +82,10 @@ int main(int argc, char *argv[])
 				out2[n] += out1[i] * w2[n][i];
 			}
 		}
+		for (n = 0; n < 10; n++) {
+			out2[n] = cut(out2[n]);;
+			printf("image %d, neurone %d : %d\n", image, n, out2[n]);
+		}
 		/*
 		 * Apply second layer constants.
 		 */
