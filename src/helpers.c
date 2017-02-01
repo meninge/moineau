@@ -108,28 +108,33 @@ int32_t get_label(FILE *mnist_label, uint32_t image_number)
 }
 
 /*
- * Take the 16 highest bits from in.
+ * Keep only 32 bits from in, in a signed 64 bits word.
  */
-int16_t cut(int64_t in)
+int64_t cut(int64_t in)
 {
 	bool negative;
-	int16_t out;
 
 	negative = (in < 0) ? true : false;
 	if (negative)
 		in = -in;
-	//in &= 0xFFFF0000; 91.3% error
-	//in &= 0x0FFFF000; 91.3% error
-	//in &= 0x03FFFC00; 83.10% error
-	//in &= 0x01FFFE00; 28.80% error
-	in &= 0x00FFFF00; //11.60% error
-	//in &= 0x007FFF80; 16.30% error
-	//in &= 0x000FFFF0; 90.70% error
-	//in &= 0x0000FFFF;
-	in >>= 8;
-	out = (int16_t)in;
+	in &= 0x00000000FFFFFFFF;
+	// NEURONS = 200
+	//in &= 0x00000000FFFFFFFF; 94.4% (HARDWARE)
+	//in &= 0x000000FFFFFFFF00; 8.5%
+	//in &= 0x0000000FFFFFFFF0; 94.7%
+	//in &= 0x0000003FFFFFFFC0; 89.4%
+	//in &= 0x0000001FFFFFFFE0; 94.8%
+	//in &= 0x00000007FFFFFFF8; 94.5%
+	// NEURONS = 100
+	//in &= 0x00000000FFFFFFFF; 93.8% (HARDWARE)
+	//in &= 0x000000FFFFFFFF00; 8.5%
+	//in &= 0x0000000FFFFFFFF0; 93.9%
+	//in &= 0x0000003FFFFFFFC0; 79.4%
+	//in &= 0x0000001FFFFFFFE0; 94.3%
+	//in &= 0x00000007FFFFFFF8; 93.9%
+	//in >>= 3;
 	if (negative)
-		out = -out;
+		in = -in;
 
-	return out;
+	return in;
 }

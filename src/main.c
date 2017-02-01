@@ -14,9 +14,7 @@ int main(int argc, char *argv[])
 {
 	FILE *mnist_label, *mnist_data;
 	int64_t out1[NEURONS_FIRST_LAYER] = {0};
-	int16_t out1_16[NEURONS_FIRST_LAYER] = {0};
 	int64_t out2[10] = {0};
-	int16_t out2_16[10] = {0};
 	int32_t i, j, n, image;
 	int32_t max = 0;
 	int32_t success = 0;
@@ -49,11 +47,9 @@ int main(int argc, char *argv[])
 		 */
 		for (n = 0; n < NEURONS_FIRST_LAYER; n++) {
 			out1[n] = 0;
-			out1_16[n] = 0;
 		}
 		for (n = 0; n < 10; n++) {
 			out2[n] = 0;
-			out2_16[n] = 0;
 		}
 		max = 0;
 		/*
@@ -69,15 +65,13 @@ int main(int argc, char *argv[])
 			}
 		}
 		/*
-		 * Cut to 16 bits values and apply activation function
+		 * We need to cut values to 32 bits in between every layer.
 		 */
-		//printf("SORTIE PREMIER NIVEAU :\n");
 		for (n = 0; n < NEURONS_FIRST_LAYER; n++) {
-			out1_16[n] = cut(out1[n]);
-			//printf("n = %d : before = %d, after = %d\n", n, out1[n], out1_16[n]);
-			//out1_16[n] += b1[n];
+			out1[n] = cut(out1[n]);
 			out1[n] += b1[n];
 			out1[n] = (out1[n] > 0) ? out1[n] : 0;
+			out1[n] = cut(out1[n]);
 		}
 
 		/*
@@ -85,26 +79,21 @@ int main(int argc, char *argv[])
 		 */
 		for (i = 0; i < NEURONS_FIRST_LAYER; i++) {
 			for (n = 0; n < 10; n++) {
-				//out2[n] += out1_16[i] * w2[n][i];
 				out2[n] += out1[i] * w2[n][i];
 			}
 		}
 		/*
 		 * Apply second layer constants.
 		 */
-		//printf("SORTIE DEUXIEME NIVEAU :\n");
 		for (n = 0; n < 10; n++) {
-			out2_16[n] = cut(out2[n]);;
-			//printf("n = %d : before = %d, after = %d\n", n, out1[n], out1_16[n]);
-			//out2_16[n] += b2[n];
+			out2[n] = cut(out2[n]);;
 			out2[n] += b2[n];
+			out2[n] = cut(out2[n]);;
 		}
 		/*
 		 * Compute the maximum value for the second layer
 		 */
 		for (i = 0; i < 10; i++) {
-			printf("image n°%d, neurone n°%d : %d\n", image, i, out2[i]);
-			//if (out2_16[i] > out2_16[max])
 			if (out2[i] > out2[max])
 				max = i;
 		}

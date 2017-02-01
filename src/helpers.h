@@ -27,5 +27,5 @@ extern int16_t b2[10];
 int32_t check_neurons_number();
 uint8_t get_pixel(FILE *mnist_data, uint32_t image_number, uint32_t line,
 		uint32_t column);
-int16_t cut(int64_t in);
+int64_t cut(int64_t in);
 int32_t get_label(FILE *mnist_label, uint32_t image_number);
