@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 				for (n = 0; n < NEURONS_FIRST_LAYER; n++) {
 					out1[n] += get_pixel(mnist_data,
 							image, i, j)
-						* w1[n][i][j];
+						* w1[n][i * ROWS + j];
 				}
 			}
 		}

@@ -12,6 +12,7 @@ LABEL_BEGIN = 0x8
 IMAGE_NUMBER = 1000
 ROWS = 28
 COLUMNS = 28
+FRAME_SIZE = ROWS * COLUMNS
 
 """
 Create a C file containing two arrays, one for the MNIST frames and one for
@@ -25,17 +26,22 @@ def write_arrays(frame_number):
         frames.write("//%d\n" % frame_number)
         frames.write("#include <stdint.h>\n")
         # frames array
-        frames.write("uint8_t frames[%d][%d] = {\n\t" % (frame_number, ROWS * COLUMNS))
+        frames.write("uint8_t frames[%d][%d] = {\n" % (frame_number, FRAME_SIZE))
         with open("../dataset/t10k-images-idx3-ubyte", "rb") as data:
             data.seek(DATA_BEGIN)
-            for i in range(frame_number * ROWS * COLUMNS - 1):
+            for i in range(frame_number - 1):
+                frames.write("{")
+                for j in range(FRAME_SIZE - 1):
+                    frames.write("%s, " % hex(ord(data.read(1))))
+                frames.write("%s},\n" % hex(ord(data.read(1))))
+            frames.write("{")
+            for j in range(FRAME_SIZE - 1):
                 frames.write("%s, " % hex(ord(data.read(1))))
-            frames.write("%s" % hex(ord(data.read(1))))
-            print(data.read(1))
+            frames.write("%s}" % hex(ord(data.read(1))))
         frames.write("\n};\n")
 
         # labels array
-        frames.write("uint8_t labels[%d] = {\n\t" % frame_number)
+        frames.write("uint8_t labels[%d] = {\n" % frame_number)
         with open("../dataset/t10k-labels-idx1-ubyte", "rb") as labels:
             labels.seek(LABEL_BEGIN)
             for i in range(frame_number - 1):

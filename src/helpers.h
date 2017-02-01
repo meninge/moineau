@@ -9,11 +9,12 @@
 #define IMAGE_NUMBER 1000
 #define ROWS 28
 #define COLUMNS 28
+#define FRAME_SIZE ((ROWS) * (COLUMNS))
 
 /*
  * Weights for the first layer.
  */
-extern int16_t w1[NEURONS_FIRST_LAYER][28][28];
+extern int16_t w1[NEURONS_FIRST_LAYER][FRAME_SIZE];
 /*
  * Weights for the second layer.
  */
