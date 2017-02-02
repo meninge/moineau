@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -g -Wno-missing-braces
+CFLAGS = -Wall -g
 LDFLAGS =
 EXEC = moineau
 SRC = $(wildcard src/*.c)
@@ -19,7 +19,7 @@ $(EXEC): $(OBJ)
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:
-	rm src/*.o
+	rm -f src/*.o
 
 parse:
 	cd extra; python parser.py $(NEURONS)
