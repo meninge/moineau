@@ -23,3 +23,6 @@ clean:
 
 parse:
 	cd extra; python parser.py $(NEURONS)
+
+frames:
+	cd extra; python frames.py

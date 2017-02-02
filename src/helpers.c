@@ -41,70 +41,16 @@ int32_t check_neurons_number()
 	}
 	sscanf(first_line, "//%d\n", &neurons);
 	if (neurons != NEURONS_FIRST_LAYER) {
-		printf("error: `src/net.c` must contain NEURONS_FIRST_LAYER neuron definitions\n");
+		printf("error: neuron number mismatch\n");
+		printf("If you switched from 100 to 200 neurons, make sure that you used the following commands in that order to compile:\n");
+		printf("make parse NEURONS=200\n");
+		printf("make NEURONS=200\n");
 		return -1;
 	}
 	free(first_line);
 	fclose(net);
 
 	return 0;
-}
-
-/*
- * Get one pixel value from the MNIST test set. The mnist_data file must be
- * opened before calling this function.
- * Return the pixel value if success and 0 if an error occured.
- */
-uint8_t get_pixel(FILE *mnist_data, uint32_t image_number, uint32_t line,
-		uint32_t column)
-{
-	uint8_t pixel;
-	long image_offset;
-
-	if (image_number >= IMAGE_NUMBER || line >= ROWS || column >= COLUMNS) {
-		printf("error: wrong get_pixel arguments\n");
-		return 0;
-	}
-
-	image_offset = DATA_BEGIN + image_number * ROWS * COLUMNS;
-	if (fseek(mnist_data, image_offset + line * COLUMNS + column, SEEK_SET)
-			< 0) {
-		printf("error: can't seek into file\n");
-		return 0;
-	}
-	if (fread(&pixel, 1, 1, mnist_data) == 0) {
-		printf("error: can't read pixel\n");
-		return 0;
-	}
-
-	return pixel;
-}
-
-/*
- * Get the label for the corresponding image in the MNIST test set. The label
- * file must be opened before calling this function.
- * Returns the label value if success or -1 if an error occured.
- */
-int32_t get_label(FILE *mnist_label, uint32_t image_number)
-{
-	uint8_t label;
-	long label_offset;
-
-	if (image_number >= 1000) {
-		printf("error: wrong image_number argument\n");
-		return -1;
-	}
-	label_offset = LABEL_BEGIN + image_number;
-	if (fseek(mnist_label, label_offset, SEEK_SET) < 0) {
-		printf("error: can't seek into file\n");
-		return -1;
-	}
-	if (fread(&label, 1, 1, mnist_label) == 0) {
-		printf("error: can't read pixel\n");
-		return -1;
-	}
-
-	return (int32_t)label;
 }
 
 /*

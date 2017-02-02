@@ -25,8 +25,12 @@ extern int16_t w2[10][NEURONS_FIRST_LAYER];
 extern int16_t b1[NEURONS_FIRST_LAYER];
 extern int16_t b2[10];
 
+/*
+ * Frames and labels
+ */
+extern uint8_t frames[IMAGE_NUMBER][FRAME_SIZE];
+extern uint8_t labels[IMAGE_NUMBER];
+
+
 int32_t check_neurons_number();
-uint8_t get_pixel(FILE *mnist_data, uint32_t image_number, uint32_t line,
-		uint32_t column);
 int64_t cut(int64_t in);
-int32_t get_label(FILE *mnist_label, uint32_t image_number);

@@ -12,7 +12,6 @@
 
 int main(int argc, char *argv[])
 {
-	FILE *mnist_label, *mnist_data;
 	int64_t out1[NEURONS_FIRST_LAYER] = {0};
 	int64_t out2[10] = {0};
 	int32_t i, j, n, image;
@@ -27,20 +26,6 @@ int main(int argc, char *argv[])
 		printf("error: wrong neurons number\n");
 		return -1;
 	}
-	/*
-	 * Open MNIST dataset and labels.
-	 */
-	mnist_label = fopen("dataset/t10k-labels-idx1-ubyte", "rb");
-	if (mnist_label == NULL) {
-		printf("error: `dataset/t10k-labels-idx1-ubyte` file does not exist\n");
-		return -1;
-	}
-	mnist_data = fopen("dataset/t10k-images-idx3-ubyte", "rb");
-	if (mnist_data == NULL) {
-		printf("error: `dataset/t10k-images-idx3-ubyte` file does not exist\n");
-		return -1;
-	}
-
 	for (image = 0; image < IMAGE_NUMBER; image++) {
 		/*
 		 * Initialization
@@ -58,8 +43,7 @@ int main(int argc, char *argv[])
 		for (i = 0; i < ROWS; i++) {
 			for (j = 0; j < COLUMNS; j++) {
 				for (n = 0; n < NEURONS_FIRST_LAYER; n++) {
-					out1[n] += get_pixel(mnist_data,
-							image, i, j)
+					out1[n] += frames[image][i * ROWS + j]
 						* w1[n][i * ROWS + j];
 				}
 			}
@@ -101,14 +85,11 @@ int main(int argc, char *argv[])
 		/*
 		 * Compute success rate
 		 */
-		if (max == get_label(mnist_label, image)) {
+		if (max == labels[image]) {
 			success++;
 		}
 	}
 	printf("success rate: %.2f%%\n", (success / (float)IMAGE_NUMBER) * 100);
-
-	fclose(mnist_label);
-	fclose(mnist_data);
 
 	return 0;
 }
