@@ -43,6 +43,7 @@ int32_t check_neurons_number()
 	if (neurons != NEURONS_FIRST_LAYER) {
 		printf("error: neuron number mismatch\n");
 		printf("If you switched from 100 to 200 neurons, make sure that you used the following commands in that order to compile:\n");
+		printf("make clean\n");
 		printf("make parse NEURONS=200\n");
 		printf("make NEURONS=200\n");
 		return -1;
